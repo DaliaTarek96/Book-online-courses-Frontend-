@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Student</title>
+    <link href="css/bootstrap.css" rel="stylesheet">
+    <link href="style.css" rel="stylesheet">
+
+    <script src="./vue.js"></script>
+
+</head>
+
+<body>
+
+    <div id="coursesList" class="container-fluid  text-center">
+        <!--Course list-->
+        <div id="listofcourses">
+            <p class="h1 jumbotron bg-dark text-light">List Of Courses</p>
+            <div class="container">
+                <div class="row ">
+                    <div class="col-md-4" v-for="course in courses">
+                        <div class="card">
+                            <div class="card-header">
+                                <img :src="course.image" alt="course">
+                            </div>
+                            <div class="card-body text-center">
+                                <h5 v-if="course.sale" class="card-title text-danger ">On Sale:&nbsp;&nbsp;{{course.courseName}}</h5>
+                                <h5 v-else class="card-title ">{{course.courseName}}</h5>
+
+                                <p class="card-text">{{course.category}}</p>
+                                <p class="card-text"> The Number Of Students in The Course: {{course.numberOfStudent}}
+                                
+                                <p v-if="course.sale":class="['card-text',course.salePrice<=100?'less':'greater']" ><del>{{course.price+"$"}} </del>=> {{course.salePrice+"$"}}</p>
+                                <p v-else :class="['card-text',course.price<=100?'less':'greater']"> {{course.price+"$"}}</p>
+                                <p class="card-text text-danger" v-if="!course.isStarted">Sorry, Course Started Wait For
+                                    The
+                                    Next Course</p>
+                                <p class="card-text text-success" v-else>You Can Join The Course Now<br /><br /> </p>
+
+                            </div>
+                            <div class="card-footer text-center">
+                                <button class="btn btn-success w-50 " :disabled="!course.isStarted"
+                                    @click="add(course,$event)">Join</button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <!--End Row-->
+                <button class="btn-lg btn-info w-25" @click='showStudentCourses'>Show Your courses</button>
+            </div>
+            <!--End Container-->
+        </div>
+        <!--End of courseList-->
+        <!--Courses of student-->
+        <div id="studentcourses">
+            <p class="h1 jumbotron bg-dark text-light"> Your Courses</p>
+            <div class="container">
+                <div class="row ">
+                    <div class="col-md-4" v-for="(course,index) in assignedCourses">
+                        <div class="card">
+                            <div class="card-header">
+                                <img :src="course.image" alt="course">
+                            </div>
+                            <div class="card-body text-center">
+                                <h5 v-if="course.sale" class="card-title text-danger ">On Sale&nbsp;&nbsp;{{course.courseName}}</h5>
+                                <h5 v-else class="card-title ">{{course.courseName}}</h5>
+                                <p class="card-text">{{course.category}}</p>
+                                <p class="card-text"> The Number Of Students in The Course: {{course.numberOfStudent}}
+                                </p>
+
+                                <p v-if="course.sale":class="['card-text',course.salePrice<=100?'less':'greater']" ><del>{{course.price+"$"}} </del>=> {{course.salePrice+"$"}}</p>
+                                <p v-else :class="['card-text',course.price<=100?'less':'greater']">{{course.price+"$"}}</p>
+                                <p class="card-text text-danger" v-if="!course.isStarted">Sorry, Course Started Wait For
+                                    The
+                                    Next Course</p>
+                                <p class="card-text text-success" v-else>You Can Join The Course Now<br /><br /> </p>
+
+                            </div>
+                            <div class="card-footer text-center">
+                                <button class="btn btn-success w-50 " @click="cancelJoin(course,index,$event)">Cancel
+                                    Join</button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <!--End Row-->
+                <button class="btn-lg btn-info w-25" @click='showListCourses'>Show Courses List</button>
+            </div>
+            <!--End Container-->
+        </div>
+        <!--End of student courses-->
+    </div>
+
+    <div class="container-fluid">
+        <footer class="h4  bg-dark text-light text-center">
+            Copy Right &copy; 2020
+        </footer>
+    </div>
+    <!-- ******************************* -->
+    <script src="js/JQuery-3.3.1.js"></script>
+    <script src="js/popper.js"></script>
+    <script src="js/bootstrap.js"></script>
+    <script>
+        $(function () {
+            $('#studentcourses').hide();
+        });
+        var vm = new Vue({
+            el: "#coursesList",
+            data: {
+                assignedCourses: [],
+                courses: [
+                    { courseName: "FullStack", category: "Web Development", image: "Up/fullsrtack1.jfif", numberOfStudent: 50, price: 150, add:false,isStarted: true,sale:true,salePrice:90},
+                    { courseName: "MeanStack", category: "Web Development", image: "Up/meanstack.jfif", numberOfStudent: 20, price: 400, isStarted: false },
+                    { courseName: "Bootstrap", category: "Web Development", image: "Up/bootstrap.jfif", numberOfStudent: 30, price: 200, isStarted: true ,sale:true,salePrice:150},
+                    { courseName: "OS", category: "Open Source", image: "Up/opensource.png", numberOfStudent: 40, price: 90, isStarted: false },
+                    { courseName: "ES6", category: "Web Development", image: "Up/es6.png", numberOfStudent: 22, price: 50, isStarted: true },
+                    { courseName: "Graphic", category: "Craphic Design", image: "Up/graphic.jfif", numberOfStudent: 26, price: 80, isStarted: true },
+                ],
+                eventBtn: []
+            },
+            methods: {
+                add: function (course, event) {
+                    var newcourse = {
+                        courseName: course.courseName, category: course.category,
+                        image: course.image, numberOfStudent: course.numberOfStudent, price: course.price,sale:course.sale,salePrice:course.salePrice
+                    };
+                    this.assignedCourses.push(newcourse);
+                    this.add=true;
+                    this.eventBtn.push({ courseName: course.courseName, events: event });
+                    addCoure(event);
+                },
+                showStudentCourses: function () {
+                    $('#studentcourses').show();
+                    $('#listofcourses').hide();
+                },
+                showListCourses: function () {
+                    $('#studentcourses').hide();
+                    $('#listofcourses').show();
+                },
+                cancelJoin: function (course, index, event) {
+                    var con = confirm('Are you sure , you want cancel course?');
+                    this.add=false;
+                    if (con) {
+                        for (course of this.eventBtn) {
+                            if (course.courseName == this.assignedCourses[index].courseName) remoeCourse(course.events);
+                        }
+                        this.assignedCourses.splice(index, 1);
+                    }
+                }
+            }
+
+
+        });
+        function addCoure(event) {
+            event.target.classList += ' btn-danger ';
+            event.target.innerText = "Already Joined";
+            event.target.disabled = true;
+        }
+        function remoeCourse(event) {
+            event.target.classList -= ' btn-danger ';
+            event.target.classList += ' btn btn-success w-50  ';
+            event.target.innerText = "Join";
+            event.target.disabled = false;
+        }
+    </script>
+
+</body>
+
+</html>
