@@ -1,5 +1,5 @@
 # Book-online-courses-Frontend-
-# link to show video of project : https://youtu.be/HSrKVrmDjuA
+# link to show video of project : https://daliatarek96.github.io/Book-online-courses-Frontend-/
 
  project description: simple book online courses (frontend only)
 
